@@ -2,6 +2,7 @@ import tkinter as tk
 from functools import partial
 from myRCMParser import build_categories
 from time import sleep
+import requests
 
 DEFAULT_URL = "https://www.myrcm.ch/myrcm/main?dId[O]=53143&pLa=fr&dId[E]=84019&tId=E&hId[1]=org#"
 
@@ -51,7 +52,14 @@ class App(tk.Tk):
 
     def rebuild_gui_from_url(self, url):
         """Fetch new categories from `url`, rebuild the dropdowns and pilot buttons."""
-        self.categories = build_categories(url, basePath=".")
+        try:
+            self.categories = build_categories(url, basePath=".")
+        except requests.exceptions.HTTPError as e:
+            self.status_var.set(f"Error loading URL: {e}")
+            return
+        except requests.exceptions.InvalidURL as e:
+            self.status_var.set(f"Error, invalid URL: {e}")
+            return
 
         # Destroy old frames if they exist
         if self.category_frame:
