@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from pathlib import Path
+from CategoryDict import categoryDict
 
 # =============================================================================
 # Classes
@@ -34,6 +35,10 @@ class Serie:
 class Category:
     def __init__(self, categoryName, serieList=None):
         self.categoryName = categoryName
+        try:
+            self.prettyName = categoryDict[categoryName]
+        except KeyError:
+            self.prettyName = categoryName
         # serieList is a list of Serie objects
         self.serieList = serieList if serieList is not None else []
 
@@ -186,14 +191,14 @@ def build_categories(url, basePath:Path):
                     name=pilot_dict['pilot'],
                     country=pilot_dict['country'],
                     profilePicPath=None,
-                    carPicPath=Path(basePath, category_obj.categoryName, serie_obj.serieName, f"{category_obj.categoryName}-{serie_obj.serieName}-{pilot_dict['pilot']}.jpg")
+                    carPicPath=Path(basePath, category_obj.prettyName, serie_obj.serieName, f"{category_obj.prettyName}-{serie_obj.serieName}-{pilot_dict['pilot']}.jpg")
                 )
                 serie_obj.pilotlist.append(pilot_obj)
 
             category_obj.serieList.append(serie_obj)
 
         categories.append(category_obj)
-
+    print(categories)
     return categories
 
 # =============================================================================

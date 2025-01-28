@@ -168,12 +168,13 @@ class App(tk.Tk):
             btn.pack(anchor='w', padx=5, pady=3)
 
     def on_pilot_click(self, pilot):
-        message = f"Taking picture of {pilot.name} ({pilot.ID})"
+        message = f"Taking picture of {pilot.name} ({pilot.ID})..."
         self.status_var.set(message)
         print(message)
         sleep(2)        
         message = f"Saving in {pilot.carPicPath}"
         self.status_var.set(message)
+        print(message)
 
 def main():
     app = App()
